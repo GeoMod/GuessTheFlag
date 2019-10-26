@@ -18,6 +18,7 @@ struct ContentView: View {
     @State private var correctAnswer = Int.random(in: 0...2)
     
     @State private var currentAnswer = 0
+	@State private var didSelectCorrectAnswer = false
     
     var body: some View {
         
@@ -35,16 +36,15 @@ struct ContentView: View {
                 ForEach(0 ..< 3) { number in
                     Button(action: {
                         self.flaggTapped(number)
-                    }) {
-                        Image(self.countries[number]).renderingMode(.original)
-                            .clipShape(RoundedRectangle(cornerRadius: 8.0))
-                            .shadow(color: .black, radius: 2.0, x: 1, y: 2)
-                        // Other options
-//                            .clipShape(Capsule())
-//                            .overlay(Capsule().stroke(Color.black, lineWidth: 1))
-//                            .shadow(color: .black, radius: 2.0, x: 1, y: 1)
-                    }
+					}) {
+						
+						Image(self.countries[number]).renderingMode(.original)
+							.clipShape(RoundedRectangle(cornerRadius: 8.0))
+							.shadow(color: .black, radius: 2.0, x: 1, y: 2)
+					}
+                    
                 }
+                
                 Text("Score: \(score)")
                     .font(.title)
                     .fontWeight(.light)
