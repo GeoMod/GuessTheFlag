@@ -17,23 +17,9 @@ struct FlagModifier: ViewModifier {
 	
 }
 
-struct ButtonRotation: ViewModifier {
-	@State private var rotationAmount = 0.0
-	
-	func body(content: Content) -> some View {
-		content
-			.rotation3DEffect(.degrees(rotationAmount), axis: (x: 0, y: 1, z: 0))
-	}
-}
-
-
-
 
 extension View {
     func buttonStyle() -> some View {
 		self.modifier(FlagModifier())
     }
-	func rotation() -> some View {
-		self.modifier(ButtonRotation())
-	}
 }
