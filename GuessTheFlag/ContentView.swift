@@ -16,11 +16,13 @@ struct ContentView: View {
     
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
+	@State private var currentAnswer = 0
     
-    @State private var currentAnswer = 0
 	@State private var didSelectCorrectAnswer = false
 	@State private var rotation = 0.0
 	@State private var opacity = 1.0
+	@State private var rightWrongOpactity = 0.0
+	
     
     var body: some View {
         
@@ -35,7 +37,6 @@ struct ContentView: View {
                         .fontWeight(.black)
                 }
 				
-                
                 ForEach(0 ..< 3) { number in
                     Button(action: {
 						self.opacity = 0.25
@@ -46,34 +47,52 @@ struct ContentView: View {
 							}
 						} else {
 							self.rotation = 0
+							
 						}
 					}) {
 						Image(self.countries[number]).renderingMode(.original)
 							.clipShape(RoundedRectangle(cornerRadius: 8.0))
 							.shadow(color: .black, radius: 2.0, x: 1, y: 2)
-					}
 						
+					}
 					.opacity((number == self.correctAnswer) ? 1 : self.opacity)
+					.animation(.default)
 					.rotation3DEffect(.degrees((number == self.correctAnswer) ? self.rotation : 0), axis: (x: 0, y: 1, z: 0))
+					
 					.animation(.easeInOut(duration: 1.0), value: self.didSelectCorrectAnswer)
                 }
 
 				Text("Score: \(score)")
 				.font(.title)
 				.fontWeight(.light)
-				.shadow(color: .black, radius: 2.0, x: 1, y: 1)
-                Spacer()
+				.shadow(color: .black, radius: 0.5, x: 0, y: 0)
+
+				if didSelectCorrectAnswer {
+					RightOrWrong(text: "👍")
+						.opacity(1)
+						.transition(.move(edge: .bottom))
+						.animation(.easeIn)
+				} else {
+					RightOrWrong(text: "👎")
+						.transition(.move(edge: .top))
+						.opacity(1)
+						.animation(.easeIn)
+				}
+				Spacer()
 				
 				Button(action: {
 					self.askQuestion()
 				}) {
-					Text("Guess again?")
+					Text("Shuffle")
 						.font(.headline)
-					.padding(70)
-					.background(Color.red)
-					.foregroundColor(.white)
-					.clipShape(Circle())
+						.fontWeight(.semibold)
+						
+						.padding(70)
+						.background(Color.red)
+						.foregroundColor(.black)
+						.clipShape(Circle())
 						.shadow(color: .black, radius: 2.0, x: 1, y: 2)
+					
 				}
              Spacer()
 			}
@@ -109,6 +128,7 @@ struct ContentView: View {
     func askQuestion() {
 		rotation = 0
 		opacity = 1
+		rightWrongOpactity = 0
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
